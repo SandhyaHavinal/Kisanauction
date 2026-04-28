@@ -1,0 +1,29 @@
+.gallery{
+    
+    width: 400px;
+    margin-top:300px;
+    margin-left:500px;
+    border:1px solid black;
+    background-color: black;
+    padding:30px;
+    border-radius:10px;
+
+}
+.photo
+{
+    margin-top:10px;
+    color:white;
+    font-size:20px;
+    border:1px solid white;
+}
+.add-btn
+{
+    background-color: orange;
+    padding:10px;
+    border-radius:15px;
+    margin-left:150px;
+    margin-top:20px;
+    font-weight: bold;
+    width:100px;
+
+}

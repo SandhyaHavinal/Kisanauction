@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Trade Room - KisanAuction</title>
+<link rel="stylesheet" type="text/css" href="css/bootstrap.css"/>
+<link rel="stylesheet" type="text/css" href="css/bootstrap-grid.css"/>
+<link rel="stylesheet" type="text/css" href="css/style.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<style>
+/* Trading Dashboard Layout Overrides */
+body {
+  background: var(--bg-light);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.trade-header {
+  background: white;
+  padding: 15px 30px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid var(--primary-color);
+  z-index: 10;
+}
+
+.pulsing-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background-color: var(--danger-color);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--danger-color);
+  animation: pulse-red 1.5s infinite;
+  margin-right: 8px;
+}
+@keyframes pulse-red {
+  0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(192, 57, 43, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(192, 57, 43, 0); }
+  100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(192, 57, 43, 0); }
+}
+
+.winner-banner {
+    display: none;
+    background: linear-gradient(135deg, var(--success-color), #205c23);
+    color: white;
+    padding: 15px;
+    text-align: center;
+    border-radius: var(--border-radius);
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-md);
+    animation: fadeInDown 0.5s ease-out;
+}
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Bid row highlighting */
+.new-bid-row {
+    background-color: rgba(252, 163, 17, 0.15) !important;
+    transition: background-color 2s ease;
+}
+.modern-table td { padding: 12px 16px; }
+</style>
+</head>
+
+<body>
+
+  <!-- Minimal Header -->
+  <header class="trade-header">
+    <div class="d-flex align-items-center">
+      <a href="javascript:history.back()" class="text-dark me-3"><i class="bi bi-arrow-left fs-4"></i></a>
+      <h3 class="m-0 fw-bold title-gradient">Trade Room</h3>
+    </div>
+    
+    <div class="trade-timer d-flex align-items-center">
+      <span class="pulsing-dot"></span> TIME LEFT: &nbsp; <span id="time" class="fs-5">00:00</span>
+    </div>
+  </header>
+
+  <div class="container-fluid py-4 flex-grow-1 d-flex flex-column" style="max-width:1400px;">
+    
+    <!-- Winner Display hidden by default -->
+    <div class="winner-banner" id="winnerBanner">
+      <i class="bi bi-trophy-fill text-warning me-2 fs-3"></i> 
+      <span>Auction Closed</span>
+    </div>
+
+    <!-- Rating UI (Hidden by default) -->
+    <div id="ratingPanel" style="display: none;" class="glass-panel p-4 mb-4 bg-white text-center">
+      <h5 class="fw-bold text-dark mb-3">Rate This Trading Experience</h5>
+      <div class="d-flex justify-content-center gap-2 mb-3 fs-3" id="starContainer">
+        <i class="bi bi-star-fill text-warning" data-val="1" style="cursor: pointer;"></i>
+        <i class="bi bi-star-fill text-warning" data-val="2" style="cursor: pointer;"></i>
+        <i class="bi bi-star-fill text-warning" data-val="3" style="cursor: pointer;"></i>
+        <i class="bi bi-star-fill text-warning" data-val="4" style="cursor: pointer;"></i>
+        <i class="bi bi-star-fill text-warning" data-val="5" style="cursor: pointer;"></i>
+      </div>
+      <button class="premium-btn px-4" id="submitRatingBtn">Submit Rating</button>
+    </div>
+
+    <div class="row g-4 flex-grow-1">
+      
+      <!-- LEFT SIDE: Product & Current Bid -->
+      <div class="col-lg-5 col-xl-4 d-flex flex-column gap-4">
+        
+        <!-- Product Details Card -->
+        <div class="glass-panel overflow-hidden bg-white">
+          <img src="assets/images/default-product.png" id="productimg" alt="Product" style="width:100%; height:250px; object-fit:cover; border-bottom:1px solid #ddd;">
+          
+          <div class="p-4">
+            <h3 id="crop" class="fw-bold text-dark mb-1">Loading...</h3>
+            <p class="text-muted mb-3"><i class="bi bi-person-bounding-box me-1"></i> <span id="fname">Farmer</span></p>
+            
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-secondary fw-semibold">Quantity</span>
+              <strong id="qty" class="text-dark">---</strong>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span class="text-secondary fw-semibold">Base Price</span>
+              <strong class="text-dark">₹<span id="price">---</span></strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bidding Panel -->
+        <div class="glass-panel p-4 bg-white text-center">
+          <p class="text-muted fw-bold mb-1 text-uppercase letter-spacing-1">Current Highest Bid</p>
+          <div class="price-display">₹<span id="highestBid">0</span></div>
+          
+          <hr class="my-4">
+          
+          <div class="text-start">
+            <label class="form-label text-muted small fw-bold">Your Trading Name</label>
+            <input type="text" id="buyername" class="custom-input mb-3" placeholder="Name">
+            
+            <label class="form-label text-muted small fw-bold">Contact Number</label>
+            <input type="text" id="buyerContact" class="custom-input mb-3" placeholder="Phone">
+            
+            <label class="form-label text-muted small fw-bold">Your Bid Amount (₹)</label>
+            <input type="number" id="bidAmount" class="custom-input mb-4 border-primary" style="background:#f0f8ff" placeholder="Enter Amount">
+            
+            <button id="bidBtn" class="premium-btn w-100 py-3 fs-5 shadow-lg"><i class="bi bi-hammer me-2"></i> PLACE BID</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT SIDE: Live Order Book -->
+      <div class="col-lg-7 col-xl-8">
+        <div class="glass-panel bg-white h-100 d-flex flex-column">
+          
+          <div class="p-4 border-bottom d-flex justify-content-between align-items-center">
+             <h4 class="m-0 fw-bold text-dark"><i class="bi bi-bar-chart-line-fill text-primary me-2"></i> Live Order Book</h4>
+             <span class="badge bg-success-subtle text-success rounded-pill px-3 py-2"><i class="bi bi-activity"></i> Real-time</span>
+          </div>
+
+          <div class="flex-grow-1 position-relative p-0" style="min-height: 400px; max-height: 800px; overflow-y: auto;">
+             <table class="modern-table w-100">
+               <thead class="sticky-top bg-light" style="z-index: 5;">
+                 <tr>
+                   <th class="ps-4">Trader Name</th>
+                   <th>Contact</th>
+                   <th class="text-end">Bid (₹)</th>
+                   <th class="text-end pe-4">Timestamp</th>
+                 </tr>
+               </thead>
+               <tbody id="bidTable">
+                 <!-- JS injects rows here -->
+               </tbody>
+             </table>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+<!-- 🔥 MAIN SCRIPT -->
+<script type="module">
+import { db } from "./firebase.js";
+import { ref, get, push, set, onValue }
+from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+/* ===============================
+   GLOBAL VARIABLES
+================================ */
+let auctionEnded = false;
+let basePrice = 0;
+
+// 🔐 Load saved buyer info
+const savedBuyer = JSON.parse(localStorage.getItem("buyerInfo"));
+
+if (savedBuyer) {
+  document.getElementById("buyername").value = savedBuyer.name;
+  document.getElementById("buyerContact").value = savedBuyer.contact;
+
+  document.getElementById("buyername").disabled = true;
+  document.getElementById("buyerContact").disabled = true;
+}
+
+/* ===============================
+   GET PRODUCT ID (ONLY ONCE)
+================================ */
+const params = new URLSearchParams(window.location.search);
+const productId = params.get("productId");
+
+if (!productId) {
+  Swal.fire("Product ID missing in URL");
+  throw new Error("No productId");
+}
+
+/* ===============================
+   LOAD PRODUCT DETAILS
+================================ */
+const productRef = ref(db, "products/" + productId);
+
+get(productRef).then((snap) => {
+  if (!snap.exists()) {
+    Swal.fire("Product not found");
+    return;
+  }
+
+  const product = snap.val();
+  document.getElementById("productimg").src =
+  product.productImage || "https://via.placeholder.com/300";
+  document.getElementById("crop").innerText = product.crop;
+  document.getElementById("qty").innerText = product.quantity;
+  document.getElementById("fname").innerText = product.farmerName || "Farmer";
+
+  basePrice = Number(product.price);
+  document.getElementById("price").innerText = basePrice;
+
+  if (product.auctionEnd) {
+    startTimer(product.auctionEnd);
+  }
+});
+
+/* ===============================
+   PLACE BID (MULTIPLE TIMES)
+================================ */
+document.getElementById("bidBtn").addEventListener("click", async () => {
+
+  if (auctionEnded) {
+    Swal.fire("Auction ended");
+    return;
+  }
+
+  const buyerName = document.getElementById("buyername").value.trim();
+  const buyerContact = document.getElementById("buyerContact").value.trim();
+  const bidAmount = Number(document.getElementById("bidAmount").value);
+
+  if (!buyerName || !buyerContact || !bidAmount) {
+    Swal.fire("Fill all fields");
+    return;
+  }
+
+  // 💾 Save buyer info only first time
+if (!savedBuyer) {
+  localStorage.setItem(
+    "buyerInfo",
+    JSON.stringify({
+      name: buyerName,
+      contact: buyerContact
+    })
+  );
+
+  document.getElementById("buyername").disabled = true;
+  document.getElementById("buyerContact").disabled = true;
+}
+  if (bidAmount < basePrice) {
+    Swal.fire("Bid must be ≥ Base Price ₹" + basePrice);
+    return;
+  }
+
+  const currentHighest =
+    Number(document.getElementById("highestBid").innerText);
+
+  if (currentHighest > 0 && bidAmount <= currentHighest) {
+    Swal.fire("Bid must be higher than ₹" + currentHighest);
+    return;
+  }
+
+  const bidsRef = ref(db, "bids/" + productId);
+  const newBidRef = push(bidsRef);
+
+  await set(newBidRef, {
+    buyerName: buyerName,
+   buyerId: newBidRef.key,
+    contact: buyerContact,
+    amount: bidAmount,
+    dateTime: new Date().toLocaleString()
+  });
+
+  document.getElementById("bidAmount").value = "";
+});
+
+/* ===============================
+   SHOW ALL BIDS (LIVE)
+================================ */
+const bidsRef = ref(db, "bids/" + productId);
+
+onValue(bidsRef, (snap) => {
+
+  const bidTable = document.getElementById("bidTable");
+  const highestBidSpan = document.getElementById("highestBid");
+
+  bidTable.innerHTML = "";
+  let bids = [];
+
+  if (!snap.exists()) {
+    highestBidSpan.innerText = "0";
+    return;
+  }
+
+  snap.forEach(child => {
+    bids.push(child.val());
+  });
+
+  bids.sort((a, b) => b.amount - a.amount);
+
+  highestBidSpan.innerText = bids[0].amount;
+
+  bids.forEach((b, index) => {
+    let rowClass = index === 0 ? "new-bid-row fw-bold" : "";
+    let bidClass = index === 0 ? "text-success fs-5 fw-bold text-end" : "text-end";
+    bidTable.innerHTML += `
+      <tr class="${rowClass}">
+        <td class="ps-4 d-flex align-items-center">
+          <div class="circle-avatar bg-primary text-white d-flex justify-content-center align-items-center me-2" style="width:30px;height:30px;font-size:12px">${b.buyerName.charAt(0).toUpperCase()}</div>
+          ${b.buyerName}
+        </td>
+        <td>${b.contact}</td>
+        <td class="${bidClass}">₹${b.amount}</td>
+        <td class="text-end pe-4 text-muted small">${b.dateTime}</td>
+      </tr>
+    `;
+  });
+});
+
+/* ===============================
+   AUCTION TIMER
+================================ */
+function startTimer(endTime) {
+
+  const end = new Date(endTime).getTime();
+  const timeBox = document.getElementById("time");
+  const bidBtn = document.getElementById("bidBtn");
+  const banner = document.getElementById("winnerBanner");
+
+  const timer = setInterval(() => {
+
+    const diff = end - Date.now();
+
+    if (diff <= 0) {
+      clearInterval(timer);
+      timeBox.innerText = "00:00";
+      timeBox.classList.remove("text-danger");
+      bidBtn.disabled = true;
+      bidBtn.innerHTML = "Auction Closed";
+      auctionEnded = true;
+      
+      const winnerName = document.querySelector(".new-bid-row") ? document.querySelector(".new-bid-row td").innerText.trim() : "Highest Bidder";
+      const winAmt = document.getElementById("highestBid").innerText;
+      
+      banner.innerHTML = `<i class="bi bi-trophy-fill text-warning me-2 fs-3"></i> Auction Closed! Sold to ${winnerName} for ₹${winAmt}`;
+      banner.style.display = "block";
+      document.getElementById("ratingPanel").style.display = "block";
+      return;
+    }
+
+    const m = Math.floor(diff / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+
+    // Pulse red if less than 1 minute
+    if (m < 1) {
+      timeBox.classList.add("text-danger", "pulsing-dot");
+    } else {
+      timeBox.classList.remove("text-danger", "pulsing-dot");
+    }
+
+    timeBox.innerText =
+      `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+
+  }, 1000);
+}
+
+/* ===============================
+   RATING SYSTEM (PHASE 2)
+================================ */
+let selectedRating = 5;
+const stars = document.querySelectorAll("#starContainer .bi-star-fill");
+stars.forEach((star, index) => {
+  star.addEventListener("click", () => {
+    selectedRating = index + 1;
+    stars.forEach((s, i) => {
+      if (i < selectedRating) {
+        s.classList.add("text-warning");
+        s.classList.remove("text-muted");
+      } else {
+        s.classList.remove("text-warning");
+        s.classList.add("text-muted");
+      }
+    });
+  });
+});
+
+document.getElementById("submitRatingBtn").addEventListener("click", async () => {
+  const farmerId = document.getElementById("fname").innerText || "Farmer";
+  const ratingRef = push(ref(db, "ratings/" + farmerId));
+  await set(ratingRef, {
+    score: selectedRating,
+    voterName: document.getElementById("buyername").value.trim() || "Anonymous",
+    time: new Date().toISOString()
+  });
+  document.getElementById("ratingPanel").innerHTML = `<h5 class="text-success m-0"><i class="bi bi-check-circle-fill me-2"></i>Thank you! Your ${selectedRating}-star rating has been recorded.</h5>`;
+});
+</script>
+
+</body>
+</html>

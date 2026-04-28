@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Farmer Registration - KisanAuction</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css"/>
+  <link rel="stylesheet" type="text/css" href="css/bootstrap-grid.css"/>
+  <link rel="stylesheet" type="text/css" href="css/style.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+<div class="auth-container">
+  
+  <!-- Left Side: Hero Image -->
+  <div class="auth-hero">
+    <div class="auth-hero-overlay">
+      <div>
+        <h1 class="display-4 fw-bold mb-4">Join the<br>Revolution</h1>
+        <p class="fs-5">Connect directly with a nationwide network of buyers.<br>Take control of your pricing.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Side: Form -->
+  <div class="auth-form-side" style="overflow-y: auto;">
+    <div class="auth-box glass-panel text-center my-4">
+      
+      <!-- Back to Home -->
+      <div class="text-start mb-4">
+        <a href="index.html" class="text-muted text-decoration-none border rounded px-3 py-1 bg-white shadow-sm">
+          <i class="bi bi-arrow-left me-1"></i> Home
+        </a>
+      </div>
+
+      <img src="assets/images/farmersnap.jpg" class="circle-avatar" alt="Farmer">
+      <h2 class="mb-4">Create Farmer Account</h2>
+      
+      <form id="farm" class="text-start">
+        <div class="row">
+          <div class="col-md-6">
+            <label class="form-label text-muted small fw-bold">Full Name</label>
+            <input type="text" id="fname" class="custom-input mb-3" placeholder="Enter Full Name" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label text-muted small fw-bold">Farm Location</label>
+            <input type="text" id="flocation" class="custom-input mb-3" placeholder="State/Region" required>
+          </div>
+          <div class="col-md-12">
+            <label class="form-label text-muted small fw-bold">Email Address</label>
+            <input type="email" id="email" class="custom-input mb-3" placeholder="Email Address" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label text-muted small fw-bold">Mobile Number</label>
+            <input type="number" id="mobile" class="custom-input mb-3" placeholder="Mobile" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label text-muted small fw-bold">City</label>
+            <input type="text" id="city" class="custom-input mb-3" placeholder="City Name" required>
+          </div>
+          <div class="col-md-12">
+            <label class="form-label text-muted small fw-bold">Password</label>
+            <input type="password" id="password" class="custom-input mb-4" placeholder="Create Password" required>
+          </div>
+        </div>
+
+        <button type="submit" class="premium-btn w-100 mb-4">Register Account</button>
+      </form>
+      
+      <p class="text-muted">
+        Already have an account? <a href="farmer-login.html" class="auth-link">Sign In</a>
+      </p>
+
+    </div>
+  </div>
+
+</div>
+
+<script type="module">
+  import { farmerSignup } from "./auth.js";
+
+  document.querySelector("#farm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    const name = document.getElementById("fname").value;
+    const Location = document.getElementById("flocation").value;
+    const email = document.getElementById("email").value;
+    const mobile = document.getElementById("mobile").value;
+    const city = document.getElementById("city").value;
+    const password = document.getElementById("password").value;
+
+    const btn = this.querySelector('button');
+    const originalText = btn.innerText;
+    btn.innerText = "Registering...";
+    btn.disabled = true;
+
+    farmerSignup(email, password, { name, Location, mobile, city});
+
+    setTimeout(() => {
+      btn.innerText = originalText;
+      btn.disabled = false;
+    }, 2000);
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,376 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buyer Dashboard - KisanAuction</title>
+<link rel="stylesheet" type="text/css" href="css/bootstrap.css"/>
+<link rel="stylesheet" type="text/css" href="css/bootstrap-grid.css"/>
+<link rel="stylesheet" type="text/css" href="css/style.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+/* Dashboard specific resets */
+body { background: var(--bg-light); margin: 0; }
+</style>
+</head>
+
+<body>
+
+  <!-- MOBILE HEADER -->
+  <div class="d-md-none bg-white p-3 border-bottom d-flex justify-content-between align-items-center">
+    <img src="assets/images/logo.png" alt="Logo" style="height:40px;">
+    <button class="premium-btn text-dark bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#mobileSidebar">
+      <i class="bi bi-list"></i>
+    </button>
+  </div>
+
+<div class="dash-wrapper">
+
+  <!-- SIDEBAR -->
+  <div class="dash-sidebar collapse d-md-flex flex-column" id="mobileSidebar">
+    <div class="dash-sidebar-header">
+      <img src="assets/images/logo.png" alt="Logo" class="dash-logo">
+      <h6 class="text-success fw-bold mb-0">Buyer Portal</h6>
+    </div>
+    
+    <div class="dash-nav">
+      <button onclick="show('product')" class="active"><i class="bi bi-shop-window"></i> Trade Market</button>
+      <button onclick="show('bid')"><i class="bi bi-clock-history"></i> My Bid History</button>
+      <button onclick="show('pro')"><i class="bi bi-person-circle"></i> My Profile</button>
+      <button onclick="window.location.href='index.html'" class="mt-auto text-danger"><i class="bi bi-box-arrow-left"></i> Logout</button>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="dash-content">
+
+    <!-- ALL PRODUCTS SEC -->
+    <div id="product" class="sec active">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+        <h2 class="title-gradient mb-0">Marketplace Auctions</h2>
+        <!-- Filters -->
+        <div class="d-flex flex-wrap gap-2 align-items-center">
+            <div class="input-group" style="width: auto; max-width: 250px;">
+                <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                <input type="text" id="searchInput" class="form-control border-start-0 ps-0" placeholder="Search crops...">
+            </div>
+            <select id="cropFilter" class="form-select w-auto">
+                <option value="">All Crops</option>
+                <option value="Tomato">Tomato</option>
+                <option value="Wheat">Wheat</option>
+                <option value="Rice">Rice</option>
+                <option value="Cotton">Cotton</option>
+                <option value="Sugarcane">Sugarcane</option>
+            </select>
+            <select id="qualityFilter" class="form-select w-auto">
+                <option value="">All Quality</option>
+                <option value="A">Grade A (Premium)</option>
+                <option value="B">Grade B (Good)</option>
+                <option value="C">Grade C (Average)</option>
+            </select>
+            <input type="number" id="priceFilter" class="form-control" style="width: 120px;" placeholder="Max ₹">
+        </div>
+      </div>
+      <div id="productsDiv" class="product-grid">
+        <!-- Firebase products will load here -->
+      </div>
+    </div>
+
+    <!-- BID HISTORY SEC -->
+    <div id="bid" class="sec">
+      <h2 class="title-gradient mb-4">My Bid History</h2>
+      <div class="modern-table-wrapper">
+        <table class="modern-table">
+          <thead>
+            <tr>
+              <th>Sr.No.</th>
+              <th>Product Name</th>
+              <th>Bid Amount</th>
+              <th>Status</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="bidHistoryTable">
+            <tr><td colspan="5" style="text-align:center;color:#888">Loading bids...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <!-- PROFILE SEC -->
+    <div id="pro" class="sec">
+      <h2 class="title-gradient mb-4">My Profile</h2>
+      <div class="modern-form">
+        <div class="text-center mb-4">
+          <img src="assets/images/buyersnap.jpg" class="circle-avatar" alt="Profile" style="width: 120px; height: 120px; border-color: var(--accent-color);">
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label text-muted fw-bold small">Buyer Name</label>
+            <input type="text" id="bname" class="custom-input mb-0" placeholder="Full Name">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label text-muted fw-bold small">Business Address</label>
+            <input type="text" id="add" class="custom-input mb-0" placeholder="Address">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label text-muted fw-bold small">Contact Number</label>
+            <input type="text" id="phone" class="custom-input mb-0" placeholder="10 Digits">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label text-muted fw-bold small">Email ID</label>
+            <input type="email" id="email" class="custom-input mb-0" placeholder="mail@example.com">
+          </div>
+        </div>
+
+        <div class="d-flex gap-3 mt-4">
+          <button class="premium-btn flex-fill" onclick="updateProfile()">Update Profile Details</button>
+        </div>
+      </div>
+    </div>
+    
+  </div> <!-- END CONTENT -->
+</div> <!-- END WRAPPER -->
+
+<script>
+  function show(id) {
+    document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+
+    // Update Sidebar active state
+    const navBtns = document.querySelectorAll('.dash-nav button');
+    navBtns.forEach(b => b.classList.remove('active'));
+    const btn = Array.from(navBtns).find(b => b.getAttribute('onclick').includes(id));
+    if(btn) btn.classList.add('active');
+  }
+
+  window.onload = function () {
+    show('product');
+  };
+</script>
+
+<script type="module">
+  import { db } from './firebase.js';
+  import { ref, onValue, get } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+  const auth = getAuth();
+
+  // 🔒 Auth Guard
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      window.location.href = "buyer-login.html";
+      return;
+    }
+
+    // ✅ Load real bid history for this buyer
+    const bidHistoryTable = document.getElementById("bidHistoryTable");
+    onValue(ref(db, "bids"), (snap) => {
+      bidHistoryTable.innerHTML = "";
+      let rowNum = 1;
+      let found = false;
+      snap.forEach(productSnap => {
+        productSnap.forEach(bidSnap => {
+          const bid = bidSnap.val();
+          if (bid.buyerName && bid.contact === user.phoneNumber ||
+              bid.buyerId === bidSnap.key) {
+            // match all bids by contact or key; since no buyer UID stored, show all bids that match contact
+          }
+          // Show all bids placed by this buyer's name (stored in localStorage)
+        });
+      });
+
+      // Alternative: show bids matching buyer info stored in localStorage
+      const savedBuyer = JSON.parse(localStorage.getItem("buyerInfo") || "null");
+      if (savedBuyer) {
+        snap.forEach(productSnap => {
+          const productId = productSnap.key;
+          productSnap.forEach(bidSnap => {
+            const bid = bidSnap.val();
+            if (bid.buyerName === savedBuyer.name && bid.contact === savedBuyer.contact) {
+              found = true;
+              const statusColor = bid.status === "accepted" ? "#2e7d32" : bid.status === "rejected" ? "#c0392b" : "#888";
+              const statusLabel = bid.status === "accepted" ? "✅ Accepted" : bid.status === "rejected" ? "❌ Rejected" : "⏳ Pending";
+              bidHistoryTable.innerHTML += `
+                <tr>
+                  <td>${rowNum++}</td>
+                  <td>${bid.buyerName || "-"}</td>
+                  <td>₹${bid.amount}</td>
+                  <td style="color:${statusColor};font-weight:bold">${statusLabel}</td>
+                  <td>${bid.dateTime}</td>
+                </tr>
+              `;
+            }
+          });
+        });
+      }
+
+      if (!found) {
+        bidHistoryTable.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#888">No bids placed yet.</td></tr>`;
+      }
+    });
+  });
+
+  
+  
+  const productsDiv = document.getElementById("productsDiv");
+  const searchInput = document.getElementById("searchInput");
+  const cropFilter = document.getElementById("cropFilter");
+  const qualityFilter = document.getElementById("qualityFilter");
+  const priceFilter = document.getElementById("priceFilter");
+  let allProducts = {};
+  let farmerRatings = {}; // Cache for trust scores
+
+  function renderProducts() {
+    productsDiv.innerHTML = "";
+    const searchTerm = searchInput.value.toLowerCase();
+    const cropValue = cropFilter.value;
+    const qualityValue = qualityFilter.value;
+    const priceValue = priceFilter.value ? parseInt(priceFilter.value) : Infinity;
+
+    let count = 0;
+    for (const prodId in allProducts) {
+      const product = allProducts[prodId];
+      const prodCrop = (product.crop || "").toLowerCase();
+      
+      if (searchTerm && !prodCrop.includes(searchTerm)) continue;
+      if (cropValue && product.crop !== cropValue) continue;
+      if (qualityValue && (!product.quality || !product.quality.includes(qualityValue))) continue;
+      if (priceValue !== Infinity && parseInt(product.price) > priceValue) continue;
+
+      count++;
+      const farmerName = product.farmerName || "Farmer";
+      const farmerAddr = product.farmerAddress || "";
+      const farmerImg = product.farmerImage || "assets/images/default-farmer.png";
+      const productImg = product.productImage || "assets/images/default-product.png";
+      
+      // Trust Score UI integration point
+      const score = farmerRatings[farmerName] ? farmerRatings[farmerName].toFixed(1) : "New";
+      const trustScoreUI = `<span class="badge bg-warning text-dark ms-2"><i class="bi bi-star-fill text-dark me-1"></i>${score}</span>`;
+
+      productsDiv.innerHTML += `
+        <div class="premium-card">
+          <!-- Farmer Mini Header -->
+          <div class="d-flex align-items-center p-3 border-bottom bg-light">
+            <img src="${farmerImg}" class="circle-avatar me-3 mb-0" style="width: 45px; height: 45px; border-width: 2px;">
+            <div>
+              <h6 class="m-0 text-dark fw-bold d-flex align-items-center">${farmerName} ${trustScoreUI}</h6>
+              <small class="text-muted"><i class="bi bi-geo-alt-fill text-danger me-1"></i>${farmerAddr}</small>
+            </div>
+          </div>
+
+          <img src="${productImg}" class="p-card-img" onerror="this.src='assets/images/default-product.png'"/>
+
+          <div class="p-card-body pb-2">
+             <h5 class="p-card-title mb-3">${product.crop}</h5>
+             <div class="p-card-row">
+               <span>Quantity</span>
+               <strong class="text-dark">${product.quantity}</strong>
+             </div>
+             <div class="p-card-row">
+               <span>Base Price</span>
+               <strong class="text-success fs-5">₹${product.price}</strong>
+             </div>
+             <div class="p-card-row">
+               <span>Quality Check</span>
+               <strong class="text-muted">${product.quality}</strong>
+             </div>
+          </div>
+
+          <div class="p-card-footer mt-auto p-3 d-flex flex-column gap-2 bg-white border-top-0">
+            <button class="premium-btn w-100 auction d-flex justify-content-center align-items-center mb-0" data-id="${prodId}">
+               <i class="bi bi-hammer me-2 text-white"></i> Enter Auction
+            </button>
+            <button class="premium-btn w-100 location d-flex justify-content-center align-items-center bg-light text-dark mb-0" style="box-shadow:none;border:1px solid #ddd;" onclick="window.location.href='map.html?productId=${prodId}&fname=${encodeURIComponent(farmerName)}&faddr=${encodeURIComponent(farmerAddr)}'">
+               <i class="bi bi-pin-map-fill me-2 text-danger"></i> View Farm Location
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    if (count === 0) {
+      productsDiv.innerHTML = `<div class="col-12 py-5 text-center text-muted" style="grid-column: 1 / -1;"><i class="bi bi-search fs-1 mb-3 d-block"></i>No products match your search criteria.</div>`;
+    }
+  }
+
+  // Filter Listeners
+  searchInput.addEventListener('input', renderProducts);
+  cropFilter.addEventListener('change', renderProducts);
+  qualityFilter.addEventListener('change', renderProducts);
+  priceFilter.addEventListener('input', renderProducts);
+
+onValue(ref(db, "ratings"), snapshot => {
+  farmerRatings = {};
+  snapshot.forEach(farmerSnap => {
+    let total = 0; let count = 0;
+    farmerSnap.forEach(ratingSnap => {
+      total += ratingSnap.val().score;
+      count++;
+    });
+    if (count > 0) {
+      farmerRatings[farmerSnap.key] = total / count;
+    }
+  });
+  renderProducts(); // re-render when ratings update
+});
+
+onValue(ref(db, "products"), snapshot => {
+  allProducts = snapshot.val() || {};
+  renderProducts();
+});
+
+  productsDiv.addEventListener("click", (e) => {
+  if (e.target.classList.contains("auction")) {
+    const prodId = e.target.getAttribute("data-id");
+    window.location.href = "LiveAuction.html?productId=" + prodId;
+  }
+});
+
+// Auto-fill buyer profile
+import { update } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) return;
+  const snapshot = await get(ref(db, "buyers/" + user.uid));
+  if (!snapshot.exists()) return;
+
+  const data = snapshot.val();
+  document.getElementById("bname").value = data.name || "";
+  document.getElementById("add").value = data.address || "";
+  document.getElementById("phone").value = data.mobile || data.phone || "";
+  document.getElementById("email").value = data.email || "";
+});
+
+window.updateProfile = async function() {
+  const user = auth.currentUser;
+  if (!user) { Swal.fire("Login first"); return; }
+
+  const snapshot = await get(ref(db, "buyers/" + user.uid));
+  if (!snapshot.exists()) { Swal.fire("No profile to update"); return; }
+  
+  const prevData = snapshot.val();
+
+  const updatedData = {
+    ...prevData,
+    name: document.getElementById("bname").value || prevData.name,
+    address: document.getElementById("add").value || prevData.address,
+    mobile: document.getElementById("phone").value || prevData.mobile || prevData.phone,
+    email: document.getElementById("email").value || prevData.email
+  };
+
+  try {
+    await update(ref(db, "buyers/" + user.uid), updatedData);
+    Swal.fire("Profile updated successfully!");
+  } catch(err) {
+    console.error(err);
+    Swal.fire("Error updating profile!");
+  }
+};
+</script>
+
+
+</body>
+</html>

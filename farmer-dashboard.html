@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farmer Dashboard - KisanAuction</title>
+<link rel="stylesheet" type="text/css" href="css/bootstrap.css"/>
+<link rel="stylesheet" type="text/css" href="css/bootstrap-grid.css"/>
+<link rel="stylesheet" type="text/css" href="css/style.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+</head>
+
+<body>
+
+  <!-- MOBILE HEADER (visible on small screens) -->
+  <div class="d-md-none bg-white p-3 border-bottom d-flex justify-content-between align-items-center">
+    <img src="assets/images/logo.png" alt="Logo" style="height:40px;">
+    <button class="premium-btn text-dark bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#mobileSidebar">
+      <i class="bi bi-list"></i>
+    </button>
+  </div>
+
+<div class="dash-wrapper">
+
+  <!-- SIDEBAR -->
+  <div class="dash-sidebar collapse d-md-flex flex-column" id="mobileSidebar">
+    <div class="dash-sidebar-header">
+      <img src="assets/images/logo.png" alt="Logo" class="dash-logo">
+      <h6 class="text-success fw-bold mb-0">Farmer Portal</h6>
+    </div>
+    
+    <div class="dash-nav">
+      <button onclick="show('dash')" class="active"><i class="bi bi-grid-1x2"></i> My Products</button>
+      <button onclick="show('add')"><i class="bi bi-plus-circle"></i> Add Product</button>
+      <button onclick="show('bid')"><i class="bi bi-currency-dollar"></i> Live Bids</button>
+      <button onclick="show('pro')"><i class="bi bi-person-circle"></i> My Profile</button>
+      <button onclick="window.location.href='index.html'" class="mt-auto text-danger"><i class="bi bi-box-arrow-left"></i> Logout</button>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="dash-content">
+
+    <!-- MY PRODUCTS SEC -->
+    <div id="dash" class="sec active">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="title-gradient m-0">My Dashboard</h2>
+        <div class="stat-card p-2 px-4 flex-row align-items-center gap-3">
+          <i class="bi bi-wallet2 fs-2 text-primary"></i>
+          <div>
+            <div class="stat-label">Total Earnings</div>
+            <div class="stat-val fs-4">₹ 0</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="cards product-grid">
+        <!-- Javascript injects cards here -->
+      </div>
+    </div>
+    
+    <!-- ADD PRODUCT SEC -->
+    <div id="add" class="sec">
+      <h2 class="title-gradient mb-4">Add New Product</h2>
+      
+      <div class="modern-form">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label text-muted fw-bold small">Product Name (Crop)</label>
+            <input type="text" id="name" class="custom-input mb-0" placeholder="e.g. Tomato, Wheat">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label text-muted fw-bold small">Quantity (e.g. 100kg)</label>
+            <input type="text" id="qty" class="custom-input mb-0" placeholder="e.g. 50 kg">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label text-muted fw-bold small">Base Price (₹)</label>
+            <input type="number" id="price" class="custom-input mb-0" placeholder="e.g. 5000">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label text-muted fw-bold small">Quality/Grade</label>
+            <input type="text" id="quality" class="custom-input mb-0" placeholder="A1, Good, Poor">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label text-muted fw-bold small">Auction End Date</label>
+            <input type="datetime-local" id="auctionEnd" class="custom-input mb-0">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label text-muted fw-bold small">Farm Location</label>
+            <input type="text" id="location" class="custom-input mb-0" placeholder="Village / Area">
+          </div>
+          <div class="col-md-12 mb-4">
+            <label class="form-label text-muted fw-bold small">Upload Clear Product Image</label>
+            <input type="file" id="img" accept="image/*" class="custom-input mb-0 bg-light">
+          </div>
+        </div>
+        
+        <button class="premium-btn w-100" type="button" onclick="addProd()">Publish Product Auction</button>
+      </div>
+    </div>
+    
+    <!-- LIVE AUCTION SEC -->
+    <div id="bid" class="sec">
+      <h2 class="title-gradient mb-4">Live Auction Bids</h2>
+      
+      <div class="modern-table-wrapper">
+        <table class="modern-table">
+          <thead>
+            <tr>
+              <th>Crop Name</th>
+              <th>Quality</th>
+              <th>Buyer Name</th>
+              <th>Contact</th>
+              <th>Bid Amt (₹)</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="farmerBidTable">
+            <!-- JS Inject Bids -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <!-- PROFILE SEC -->
+    <div id="pro" class="sec">
+      <h2 class="title-gradient mb-4">My Profile</h2>
+      
+      <div class="modern-form">
+        <div class="text-center mb-4">
+          <img src="assets/images/farmersnap.jpg" class="circle-avatar" alt="Profile" style="width: 120px; height: 120px;">
+          <h4 class="mt-3 fw-bold text-dark">Trust Score: <span class="badge bg-warning text-dark"><i class="bi bi-star-fill me-1"></i><span id="farmerTrustScore">-</span></span></h4>
+          <div class="mt-2">
+            <label class="premium-btn p-2 px-3 fs-6 bg-light text-dark" style="cursor: pointer; box-shadow: none; border: 1px solid #ccc;">
+              <i class="bi bi-camera"></i> Change Photo
+              <input type="file" id="pimg" class="d-none">
+            </label>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label text-muted fw-bold small">Farmer Name</label>
+            <input type="text" id="pname" class="custom-input mb-0" placeholder="Full Name">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label text-muted fw-bold small">Contact Number</label>
+            <input type="text" id="pphone" class="custom-input mb-0" placeholder="10 Digits">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label text-muted fw-bold small">Email ID</label>
+            <input type="email" id="pemail" class="custom-input mb-0" placeholder="mail@example.com">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label text-muted fw-bold small">Full Location/Address</label>
+            <input type="text" id="pstate" class="custom-input mb-0" placeholder="State/City">
+          </div>
+        </div>
+
+        <div class="d-flex gap-3 mt-4">
+          <button class="premium-btn flex-fill" onclick="updateProfile()">Update Profile Details</button>
+        </div>
+      </div>
+    </div>
+    
+  </div> <!-- END CONTENT -->
+</div> <!-- END WRAPPER -->
+
+<script type="module">
+
+
+  import { db, auth } from './firebase.js';
+  import { ref, set, get, update, push, onValue, query, orderByChild, equalTo, remove } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+
+window.openBids = function(productId, crop, quality) {
+  localStorage.setItem("activeProductId", productId);
+  localStorage.setItem("activeCrop", crop);
+  localStorage.setItem("activeQuality", quality);
+
+  show('bid');
+  loadBidsForFarmer();
+};
+
+
+
+window.show = function(sectionId) {
+  const sections = document.querySelectorAll('.sec');
+  sections.forEach(sec => sec.classList.remove('active'));
+
+  document.getElementById(sectionId).classList.add('active');
+
+  // Update Sidebar active state
+  const navBtns = document.querySelectorAll('.dash-nav button');
+  navBtns.forEach(b => b.classList.remove('active'));
+  
+  // Find button corresponding to section and highlight it roughly based on onclick attribute parsing
+  const btn = Array.from(navBtns).find(b => b.getAttribute('onclick').includes(sectionId));
+  if(btn) btn.classList.add('active');
+
+  if (sectionId === "bid") {
+    loadBidsForFarmer();
+  }
+};
+ 
+  
+
+window.addProd = async function () {
+
+  const user = auth.currentUser;
+  if (!user) {
+    Swal.fire("Login first");
+    return;
+  }
+
+  const nameVal = document.getElementById("name").value.trim();
+  const qtyVal = document.getElementById("qty").value.trim();
+  const priceVal = document.getElementById("price").value.trim();
+  const qualityVal = document.getElementById("quality").value.trim();
+  const auctionEndVal = document.getElementById("auctionEnd").value;
+  const locationVal = document.getElementById("location").value.trim();
+  const file = document.getElementById("img").files[0];
+
+  if (
+    !nameVal ||
+    !qtyVal ||
+    !priceVal ||
+    !qualityVal ||
+    !auctionEndVal ||
+    !locationVal
+  ) {
+    Swal.fire("Fill all fields!");
+    return;
+  }
+
+  if (!file) {
+    Swal.fire("Please select product image");
+    return;
+  }
+
+  // ✅ get farmer profile
+  const farmerSnap = await get(ref(db, "farmers/" + user.uid));
+  if (!farmerSnap.exists()) {
+    Swal.fire("Please save profile first");
+    return;
+  }
+
+  const farmer = farmerSnap.val();
+
+  const reader = new FileReader();
+  reader.onload = async () => {
+
+    const productData = {
+      crop: nameVal,
+      quantity: qtyVal,
+      price: priceVal,
+      quality: qualityVal,
+      auctionEnd: auctionEndVal,
+      location: locationVal,
+
+      productImage: reader.result,
+
+      farmerId: user.uid,
+      farmerName: farmer.name || "Unknown",
+      farmerAddress: farmer.address || farmer.Location || "",
+      farmerImage: farmer.image || "assets/images/farmersnap.jpg"
+    };
+
+    try {
+      await set(push(ref(db, "products")), productData);
+      Swal.fire("✅ Product added successfully");
+      show('dash');
+
+      // clear form
+      document.getElementById("name").value = "";
+      document.getElementById("qty").value = "";
+      document.getElementById("price").value = "";
+      document.getElementById("quality").value = "";
+      document.getElementById("auctionEnd").value = "";
+      document.getElementById("location").value = "";
+      document.getElementById("img").value = "";
+
+    } catch (e) {
+      console.error(e);
+      Swal.fire("❌ Error adding product");
+    }
+  };
+
+  reader.readAsDataURL(file);
+};
+
+function loadMyProducts() {
+  const cards = document.querySelector("#dash .cards");
+
+  auth.onAuthStateChanged(user => {
+    if (!user) return;
+
+    const q = query(
+      ref(db, "products"),
+      orderByChild("farmerId"),
+      equalTo(user.uid)
+    );
+
+    onValue(q, (snapshot) => {
+      cards.innerHTML = "";
+
+      snapshot.forEach(child => {
+        const product = child.val();
+        const key = child.key;
+
+        const card = document.createElement("div");
+        card.className = "premium-card";
+
+        const now = new Date();
+        const endDate = new Date(product.auctionEnd);
+        const auctionEnded = now >= endDate;
+
+        card.innerHTML = `
+          <img src="${product.productImage}" alt="${product.crop}" class="p-card-img">
+          
+          <div class="p-card-body">
+             <div class="d-flex justify-content-between align-items-start mb-2">
+               <h4 class="p-card-title m-0">${product.crop}</h4>
+               <span class="badge ${auctionEnded ? 'rejected' : 'accepted'}">
+                 ${auctionEnded ? 'Closed' : 'Live'}
+               </span>
+             </div>
+             
+             <div class="p-card-row">
+               <span>Base Price</span>
+               <strong>₹${product.price} / ${product.quantity}</strong>
+             </div>
+             <div class="p-card-row">
+               <span>Quality</span>
+               <strong class="text-secondary">${product.quality}</strong>
+             </div>
+             <div class="p-card-row">
+               <span>End Time</span>
+               <small class="text-muted">${endDate.toLocaleString()}</small>
+             </div>
+          </div>
+          
+          <div class="p-card-footer d-flex gap-2">
+            <button class="premium-btn p-2 flex-fill border-0 d-flex justify-content-center align-items-center" onclick="openBids('${key}', '${product.crop}', '${product.quality}')">
+              <i class="bi bi-eye text-white me-2"></i> Bids
+            </button>
+            <button class="premium-btn bg-danger flex-fill border-0 d-flex justify-content-center align-items-center" style="box-shadow:none;background:var(--danger-color)" onclick="deleteProd('${key}')">
+              <i class="bi bi-trash text-white"></i>
+            </button>
+          </div>
+        `;
+
+        cards.appendChild(card);
+      });
+    });
+  });
+}
+
+window.deleteProd = function (id) {
+  if (confirm("Delete this product?")) {
+    remove(ref(db, "products/" + id));
+  }
+};
+   
+            
+
+    
+// Removed saveProfile as per requirement
+
+// Update Profile
+window.updateProfile = async function() {
+  const user = auth.currentUser;
+  if (!user) { Swal.fire("Login first"); return; }
+
+  const snapshot = await get(ref(db, "farmers/" + user.uid));
+  if (!snapshot.exists()) { Swal.fire("No profile to update"); return; }
+
+  const prevData = snapshot.val();
+  const file = document.getElementById("pimg").files[0];
+
+  const reader = new FileReader();
+  reader.onload = async () => {
+    const updatedData = {
+      ...prevData,
+      name: document.getElementById("pname").value || prevData.name,
+      Location: document.getElementById("pstate").value || prevData.Location || prevData.address,
+      mobile: document.getElementById("pphone").value || prevData.mobile || prevData.phone,
+      email: document.getElementById("pemail").value || prevData.email,
+      image: file ? reader.result : prevData.image
+    };
+
+    try {
+      await update(ref(db, "farmers/" + user.uid), updatedData);
+      Swal.fire("Profile updated successfully!");
+    } catch(err) {
+      console.error(err);
+      Swal.fire("Error updating profile!");
+    }
+  };
+
+  if (file) reader.readAsDataURL(file);
+  else reader.onload(); // keep previous image
+};
+
+// Auto-fill previous data
+auth.onAuthStateChanged(async user => {
+  if (!user) return;
+  const snapshot = await get(ref(db, "farmers/" + user.uid));
+  if (!snapshot.exists()) return;
+
+  const data = snapshot.val();
+  document.getElementById("pname").value = data.name || "";
+  document.getElementById("pstate").value = data.Location || data.address || "";
+  document.getElementById("pphone").value = data.mobile || data.phone || "";
+  document.getElementById("pemail").value = data.email || "";
+
+  // Load Farmer Trust Score
+  const farmerIdStr = data.name || "Farmer";
+  onValue(ref(db, "ratings/" + farmerIdStr), (ratingSnap) => {
+    let total = 0;
+    let count = 0;
+    ratingSnap.forEach(r => {
+      total += r.val().score;
+      count++;
+    });
+    const avg = count > 0 ? (total / count).toFixed(1) : "New";
+    document.getElementById("farmerTrustScore").innerText = avg;
+  });
+});
+
+
+window.loadBidsForFarmer = function() {
+
+  const productId = localStorage.getItem("activeProductId");
+  const crop = localStorage.getItem("activeCrop");
+  const quality = localStorage.getItem("activeQuality");
+
+  if (!productId) return;
+
+  const table = document.getElementById("farmerBidTable");
+  table.innerHTML = "";
+
+  onValue(ref(db, "bids/" + productId), snapshot => {
+
+    table.innerHTML = "";
+
+    snapshot.forEach(child => {
+      const bid = child.val();
+      const bidId = child.key;
+
+      if (bid.status === "rejected") return;
+let actionHTML = "";
+
+      if (bid.status === "accepted") {
+        actionHTML = `<span style="color:green;font-weight:bold;">✅ Accepted</span>`;
+      } else {
+        actionHTML = `<button class="btn" onclick="acceptBid('${productId}','${bidId}','${bid.contact}', this)">Accept</button>`;
+      }
+
+      table.innerHTML += `
+        <tr>
+          <td>${crop}</td>
+          <td>${quality}</td>
+          <td>${bid.buyerName}</td>
+          <td>${bid.contact}</td>
+          <td>₹${bid.amount}</td>
+          <td>${bid.dateTime}</td>
+          <td>${actionHTML}</td>
+        </tr>
+      `;
+    });
+  });
+};
+
+
+    
+
+  
+  window.acceptBid = function(productId, bidId, phone) {
+
+  update(ref(db, `bids/${productId}/${bidId}`), {
+    status: "accepted"
+  });
+
+  onValue(ref(db, "bids/" + productId), snap => {
+    snap.forEach(b => {
+      if (b.key !== bidId) {
+        update(ref(db, `bids/${productId}/${b.key}`), {
+          status: "rejected"
+        });
+      }
+    });
+  }, { onlyOnce: true });
+
+  window.open(
+    `https://wa.me/91${phone}?text=Your bid has been accepted successfully`
+  );
+if(btn){
+   
+    const td = btn.parentElement; // the <td> containing the button
+    td.innerHTML = `<span style="color:green;font-weight:bold;">✅ Accepted</span>`;
+  
+  }
+};
+
+  
+
+
+
+loadMyProducts();
+
+// 🔒 Auth Guard — redirect to login if not logged in
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    window.location.href = "farmer-login.html";
+  }
+});
+
+</script>
+
+</body>
+</html>

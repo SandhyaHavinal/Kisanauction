@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Buyer Login - KisanAuction</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css"/>
+  <link rel="stylesheet" type="text/css" href="css/bootstrap-grid.css"/>
+  <link rel="stylesheet" type="text/css" href="css/style.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+<div class="auth-container">
+  
+  <!-- Left Side: Hero Image -->
+  <div class="auth-hero" style="background-image: url('assets/images/buyeranimatedimg.png'); background-color: #f1f8ed; background-size: contain; background-repeat: no-repeat;">
+    <div class="auth-hero-overlay">
+      <div>
+        <h1 class="display-4 fw-bold mb-4">Direct Access to<br>Fresh Produce</h1>
+        <p class="fs-5">Bid securely on premium crops straight from the fields.<br>Cut the middleman. Maximize quality.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Side: Form -->
+  <div class="auth-form-side">
+    <div class="auth-box glass-panel text-center">
+      
+      <!-- Back to Home -->
+      <div class="text-start mb-4">
+        <a href="index.html" class="text-muted text-decoration-none border rounded px-3 py-1 bg-white">
+          <i class="bi bi-arrow-left me-1"></i> Home
+        </a>
+      </div>
+
+      <img src="assets/images/buyersnap.jpg" class="circle-avatar" alt="Buyer" style="border-color: var(--accent-color);">
+      <h2>Buyer Login</h2>
+      
+      <form id="buyerLoginForm">
+        <input type="email" id="email" class="custom-input" placeholder="Email Address" required>
+        <input type="password" id="password" class="custom-input" placeholder="Password" required>
+        
+        <button type="submit" class="premium-btn premium-btn-accent w-100 mt-3 mb-4">Sign In</button>
+      </form>
+      
+      <p class="text-muted">
+        New Buyer? <a href="buyer-signup.html" class="auth-link">Create Account</a>
+      </p>
+
+    </div>
+  </div>
+
+</div>
+
+<script type="module">
+  import { buyerLogin } from "./auth.js";
+
+  document.getElementById("buyerLoginForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    
+    // Add loading state
+    const btn = this.querySelector('button');
+    const originalText = btn.innerText;
+    btn.innerText = "Signing in...";
+    btn.disabled = true;
+
+    buyerLogin(email, password);
+
+    setTimeout(() => {
+      btn.innerText = originalText;
+      btn.disabled = false;
+    }, 2000);
+  });
+</script>
+
+</body>
+</html>

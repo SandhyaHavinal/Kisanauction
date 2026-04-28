@@ -1,0 +1,364 @@
+.mid_container
+{
+	margin:20px;
+	height:30px;
+	border-radius:50px;
+	text-align:center;
+	padding:5px;
+}
+body
+{
+	margin-left:500px;
+	margin-top:50px;
+	background-color:white;
+    font-size:20px;
+}
+.main_container
+{
+    height:820px;
+    width:500px;
+    margin-top:50px;
+	background-color:black;
+	border-radius:20px;
+	color:orange;
+	margin-left:30px;
+	position:static;
+	
+}
+
+.Button
+{
+	margin-left:200px;
+	margin-top:30px;
+}
+.register-btn
+{
+    margin-left:150px;
+    padding:10px;
+    border-radius:10px;
+    width:200px;
+    text-decoration:none;
+    font-weight:bold;
+    font-family:Times New Roman;
+    font-size:20px;
+    background-color: orange;
+}
+.register-btn:hover
+{
+    background-color:rgb(173, 117, 14);
+    cursor:pointer;
+}
+
+.contact_container
+{
+	
+	height:500px;
+	width:70%;
+	border:1px solid;
+	margin:auto;
+	background-color:white;
+	border-radius:40px;
+	text-align:center;
+}
+.contact_us
+{
+	
+	color:black;
+	font-size:30px;
+	text-align: center;
+	font-weight:500;
+}
+.contact_textbox
+{
+	margin-top:12px;
+	padding:7px;
+	width:300px;
+	border-radius:15px;
+	font-family:cambria;
+	font-size:15px;
+	box-shadow:0px 0px 2px 1px #BFBFBF;
+	border:2px solid white;
+	
+}
+.contact_message
+{
+	margin-top:12px;
+	padding:10px;
+	width:300px;
+	height:100px;
+	border-radius:15px;
+	font-family:cambria;
+	font-size:15px;
+	box-shadow:0px 0px 2px 1px #BFBFBF;
+	
+
+}
+.contact_button
+{
+	background-color:orange;
+	padding:10px;
+	font-size:14px;
+	text-align: center;
+	font-family:cambria;
+	font-weight:bold;
+	border-radius:10px;
+	box-shadow:0px 0px 2px 1px orange;
+
+}
+.contact_image
+{
+	margin-top:80px;
+	position:absolute;
+	right:55%;
+   height:370px;
+    width:370px;
+	border-radius:200px;
+
+}
+.right_div
+{
+
+	width:430px;
+	height:400px;
+	float:right;
+	margin:100px;
+	margin-top:60px;
+	border:1px solid white;
+	box-shadow:0px 0px 7px 4px #b3a5a5;
+}
+
+
+.about_us_signup
+{
+    background-color:black;
+    height: 50px;
+    padding: 10px;
+    width: 100px;
+    margin-left: 150px;
+    margin-top: 100px;
+    position: absolute;
+    top: 420px;
+    border-radius: 25px;
+	color:white;
+	font-weight: bold;
+	text-decoration: none;
+}
+.about_us_main
+{
+    height:250px;
+    width:500px;
+	border:2px soild orange;
+    margin-top: 120px;
+    margin-left:200px;
+}
+.about_us
+{
+    
+    top: 150px;
+	float:left;
+    font-size:25px;
+	font-weight:600;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+	color:orange;
+
+}
+.about_us_img
+{
+	position:absolute;
+	right:9%;
+	top:150px;
+
+}
+.post_form
+{
+	height:400px;
+	width:300px;
+	border:1px solid red;
+	box-shadow:0px 0px 2px 1px #BFBFBF;
+	border:2px solid black;
+	background-color:gray;
+
+}
+
+.feedback
+{
+    height:650px;
+    width:500px;
+    border:1px solid black;
+    top:200px;
+	position: absolute;
+	left:500px;
+    box-shadow:0px 0px 8px 0px;
+}
+.feed_des
+{
+    height:100px;
+    width:300px;
+}
+.feed
+{
+ text-align:left;
+ margin-left:40px;
+}
+.feed_input
+{
+    width:300px;
+    border-radius:10px;
+    padding:10px;
+}
+.feed-btn
+{
+    margin-left:130px;
+    padding:12px;
+    background-color: orange;
+    color:black;
+    border-radius:15px;
+    font-weight: bold;
+}
+.feed-btn:hover{
+	background-color:rgb(195, 132, 15);
+}
+.pop
+{
+	height:300px;
+	width:300px;
+	border:1px solid gray;
+	margin-top:200px;
+	box-shadow:0px 0px 6px 0px;
+	margin-left:620px;
+	background-color: white;
+	
+}
+.pop-msg
+{   position:relative;
+	top:100px;
+	margin:20px;
+	padding:5px;
+	text-wrap:wrap;
+	margin-left:45px;
+	font-size:20px;
+}
+.oops
+{
+	position:relative;
+	top:120px;
+	margin:20px;
+	padding:5px;
+	text-wrap:wrap;
+	margin-left:120px;
+	font-size:20px;
+}
+.txtbox
+{
+	padding:10px;
+	border-radius:20px;
+	width:300px;
+	margin-top:10px;
+	
+}
+.ok-btn
+{
+	margin-top:100px;
+	margin-left:100px;
+	width:100px;
+	background-color:orange;
+	color:black;
+
+	font-weight:600;
+	padding:8px;
+	border-radius:10px;
+
+}
+.contact_pop_up
+{
+	background-color:black;
+	font-size:20px;
+	padding:10px;
+	width:50%;
+	margin-left:380px;
+	color:white;
+	font-weight:300;
+	border-radius:15px;
+}
+.table
+{
+ position:absolute;
+ top:250px;
+ 
+}
+.pic
+{
+
+		color: orange;
+		text-decoration:none;
+		padding:20px;
+		font-weight:500;
+	
+}
+.gallery
+{
+	min-height: 700px;
+	box-shadow: 0px 0px 5px 0px;
+	border:1px solid whitesmoke;
+
+
+}
+.pic-container
+{
+	position:absolute;
+
+
+}
+.photo
+{
+	font-size: 20px;;
+	font-weight: bold;
+	position:absolute;
+	right:92%;
+}
+.pic:hover{
+    
+	text-decoration: underline;
+	padding:10px;
+
+
+}
+.add
+{
+	
+	position:absolute;
+	left:343%;
+	top:5px;
+
+
+}
+
+.action
+{
+   background-color: red;
+   color:white;
+   padding:7px;
+   text-decoration: none;
+   margin:10px;
+}
+.card_img
+{
+	height:360px;
+	width:290px;
+	margin-left:20px;
+	margin-right:30px;
+	border:1px solid gray;
+	margin-top:10px;
+}
+.card
+{
+	width:330px;
+	min-height:500px;
+	box-shadow: 0px 0px 2px 1px;
+	margin-left:30px;
+
+
+}
+
+
+

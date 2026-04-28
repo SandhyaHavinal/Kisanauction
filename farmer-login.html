@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Farmer Login - KisanAuction</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css"/>
+  <link rel="stylesheet" type="text/css" href="css/bootstrap-grid.css"/>
+  <link rel="stylesheet" type="text/css" href="css/style.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+<div class="auth-container">
+  
+  <!-- Left Side: Hero Image -->
+  <div class="auth-hero">
+    <div class="auth-hero-overlay">
+      <div>
+        <h1 class="display-4 fw-bold mb-4">Empowering<br>Local Farmers</h1>
+        <p class="fs-5">Sell your crops directly at premier market prices.<br>Transparent. Fast. Reliable.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Side: Form -->
+  <div class="auth-form-side">
+    <div class="auth-box glass-panel text-center">
+      
+      <!-- Back to Home -->
+      <div class="text-start mb-4">
+        <a href="index.html" class="text-muted text-decoration-none border rounded px-3 py-1 bg-white">
+          <i class="bi bi-arrow-left me-1"></i> Home
+        </a>
+      </div>
+
+      <img src="assets/images/farmersnap.jpg" class="circle-avatar" alt="Farmer">
+      <h2>Farmer Login</h2>
+      
+      <form id="farmerLoginForm">
+        <input type="email" id="email" class="custom-input" placeholder="Email Address" required>
+        <input type="password" id="password" class="custom-input" placeholder="Password" required>
+        
+        <button type="submit" class="premium-btn w-100 mt-3 mb-4">Sign In</button>
+      </form>
+      
+      <p class="text-muted">
+        New Farmer? <a href="farmer-signup.html" class="auth-link">Create Account</a>
+      </p>
+
+    </div>
+  </div>
+
+</div>
+
+<script type="module">
+  import { farmerLogin } from "./auth.js";
+
+  document.getElementById("farmerLoginForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    
+    // Add loading state
+    const btn = this.querySelector('button');
+    const originalText = btn.innerText;
+    btn.innerText = "Signing in...";
+    btn.disabled = true;
+
+    // Call auth.js function
+    farmerLogin(email, password);
+
+    // After a delay restore button state (if login fails, user stays on page)
+    setTimeout(() => {
+      btn.innerText = originalText;
+      btn.disabled = false;
+    }, 2000);
+  });
+</script>
+
+</body>
+</html>

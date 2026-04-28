@@ -16,7 +16,7 @@ KisanAuction is a modern web application designed to connect farmers directly wi
 - Trust Scores & Ratings
 - Buyers can rate farmers after auctions to build credibility.
 - Transparent Sourcing
-- Integrated map view to verify crop origin.
+- Integrated map view 
 
 # 🛠️ Tech Stack
 

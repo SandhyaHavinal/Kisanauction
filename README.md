@@ -41,6 +41,6 @@ KisanAuction is a modern web application designed to connect farmers directly wi
 
 This project is licensed under the MIT License.
 
-🌍 Vision
+# 🌍 Vision
 
 To build a fair, transparent, and technology-driven agricultural marketplace that empowers farmers and simplifies procurement for buyers.
